@@ -38,10 +38,9 @@ function! puppet#Format()
 		call system("puppet-lint --fix " . l:tmpname)
 	endif
 
-    "if there is no error on the temp file replace the output with the current
-    "file (if this fails, we can always check the outputs first line with:
-    "splitted =~ 'package \w\+')
-    if v:shell_error == 0
+	" puppet-lint seems to exit != 0 if there are still errors/warnings after
+	" fixing, so we ignore the return code and hope for the best
+    "if v:shell_error == 0
         " remove undo point caused via BufWritePre
         try | silent undojoin | catch | endtry
 
@@ -51,7 +50,7 @@ function! puppet#Format()
         silent edit!
         let &fileformat = old_fileformat
         let &syntax = &syntax
-    endif
+    "endif
 
     " restore our undo history
     silent! exe 'rundo ' . l:tmpundofile

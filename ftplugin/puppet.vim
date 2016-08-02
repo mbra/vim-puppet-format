@@ -12,6 +12,7 @@ function! puppet#Format()
     " Save cursor position and many other things
     let l:curw=winsaveview()
 
+    " Check for the syntastic configuration for puppet-lint and use it, too.
     if exists("g:syntastic_puppet_puppetlint_args")
         let l:puppet_lint_cmd = "puppet-lint " . g:syntastic_puppet_puppetlint_args . " --fix "
     else

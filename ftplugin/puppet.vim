@@ -38,9 +38,9 @@ function! puppet#Format()
     let l:tmpundofile=tempname()
     exe 'wundo! ' . tmpundofile
 
-    let out = system(l:puppet_lint_cmd."".l:tmpname)
+    let out = system(l:puppet_lint_cmd.l:tmpname)
     if out =~ "tab character found"
-        call system(l:puppet_lint_cmd."".l:tmpname)
+        call system(l:puppet_lint_cmd.l:tmpname)
     endif
 
     " puppet-lint seems to exit != 0 if there are still errors/warnings after

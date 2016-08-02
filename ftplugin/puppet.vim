@@ -12,6 +12,12 @@ function! puppet#Format()
     " Save cursor position and many other things
     let l:curw=winsaveview()
 
+    if exists("g:syntastic_puppet_puppetlint_args")
+        let l:puppet_lint_cmd = "puppet-lint " . g:syntastic_puppet_puppetlint_args . " --fix "
+    else
+        let l:puppet_lint_cmd = "puppet-lint --fix "
+    endif
+
     " Write current unsaved buffer to a temp file
     " Replace all tabs because of https://github.com/rodjek/puppet-lint/issues/366
     " To not remove an intended tab somewhere in the code, we only replace all tabs
@@ -32,9 +38,9 @@ function! puppet#Format()
     let l:tmpundofile=tempname()
     exe 'wundo! ' . tmpundofile
 
-    let out = system("puppet-lint --fix " . l:tmpname)
+    let out = system(l:puppet_lint_cmd."".l:tmpname)
     if out =~ "tab character found"
-        call system("puppet-lint --fix " . l:tmpname)
+        call system(l:puppet_lint_cmd."".l:tmpname)
     endif
 
     " puppet-lint seems to exit != 0 if there are still errors/warnings after

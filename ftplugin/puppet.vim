@@ -12,6 +12,7 @@ function! puppet#Format()
     " Save cursor position and many other things
     let l:curw=winsaveview()
 
+    " Check for the syntastic configuration for puppet-lint and use it, too.
     if exists("g:syntastic_puppet_puppetlint_args")
         let l:puppet_lint_cmd = "puppet-lint " . g:syntastic_puppet_puppetlint_args . " --fix "
     else
@@ -38,9 +39,9 @@ function! puppet#Format()
     let l:tmpundofile=tempname()
     exe 'wundo! ' . tmpundofile
 
-    let out = system(l:puppet_lint_cmd."".l:tmpname)
+    let out = system(l:puppet_lint_cmd.l:tmpname)
     if out =~ "tab character found"
-        call system(l:puppet_lint_cmd."".l:tmpname)
+        call system(l:puppet_lint_cmd.l:tmpname)
     endif
 
     " puppet-lint seems to exit != 0 if there are still errors/warnings after
